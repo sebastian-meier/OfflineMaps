@@ -111,12 +111,34 @@
 
 /* Comment out the block below to over-ride */
 
-/*
+
 
 - (void) webViewDidStartLoad:(UIWebView*)theWebView
 {
+    NSString *databaseName = @"map.mbtiles.db";
+    
+    NSArray *libraryPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+    NSString *libraryDir = [libraryPaths objectAtIndex:0];
+    
+    NSString *databasePath = [libraryDir stringByAppendingPathComponent:@"../Documents/Databases/"];
+    NSString *databaseFile = [databasePath stringByAppendingPathComponent:databaseName];
+    
+    BOOL success;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    success = [fileManager fileExistsAtPath:databasePath];
+    if(success) return;
+    
+    NSString *databasePathFromApp = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:databaseName];
+    
+    [fileManager createDirectoryAtPath:databasePath withIntermediateDirectories:YES attributes:nil error:NULL];
+    [fileManager copyItemAtPath:databasePathFromApp toPath:databaseFile error:nil];
+    [fileManager release];
+    
     return [super webViewDidStartLoad:theWebView];
 }
+
+/*
 
 - (void) webView:(UIWebView*)theWebView didFailLoadWithError:(NSError*)error
 {
