@@ -110,6 +110,10 @@
     <feature name="LocalStorage">
         <param name="ios-package" value="CDVLocalStorage"/>
     </feature>
+    <!-- new Plugins -->
+    <feature name="SQLitePlugin">
+        <param name="ios-package" value="SQLitePlugin" />
+    </feature>
     <!-- Deprecated plugins element. REmove in 3.0 -->
     <plugins>
     </plugins>
