@@ -230,6 +230,10 @@ footer {
   header ul, header p.view {
     position:static;
   }
+
+  header p.view {
+    line-height:1.3;
+  }
   
   pre, code {
     word-wrap:normal;
