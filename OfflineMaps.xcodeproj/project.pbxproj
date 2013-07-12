@@ -46,8 +46,8 @@
 		5AEE5B35173C68D80009041E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AEE5B34173C68D80009041E /* CoreLocation.framework */; };
 		5B1594DD16A7569C00FEF299 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */; };
 		69F9679E178F02E300AE2EC7 /* SQLitePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9679D178F02E300AE2EC7 /* SQLitePlugin.m */; };
-		69F967A1179002C300AE2EC7 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 69F967A0179002C300AE2EC7 /* libsqlite3.dylib */; };
 		69F967A7179003F100AE2EC7 /* map.mbtiles.db in Resources */ = {isa = PBXBuildFile; fileRef = 69F967A6179003F100AE2EC7 /* map.mbtiles.db */; };
+		69F967A91790519100AE2EC7 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 69F967A0179002C300AE2EC7 /* libsqlite3.dylib */; };
 		D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */; };
 		F840E1F1165FE0F500CFE078 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = F840E1F0165FE0F500CFE078 /* config.xml */; };
 /* End PBXBuildFile section */
@@ -127,7 +127,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				69F967A1179002C300AE2EC7 /* libsqlite3.dylib in Frameworks */,
+				69F967A91790519100AE2EC7 /* libsqlite3.dylib in Frameworks */,
 				301BF5BF109A6A2B0062928A /* CoreLocation.framework in Frameworks */,
 				5AA0E66F1729F460000DC89A /* ImageIO.framework in Frameworks */,
 				5AA0E66D1729F45B000DC89A /* OpenAL.framework in Frameworks */,
