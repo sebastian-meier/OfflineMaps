@@ -28,15 +28,61 @@
         </ul>
       </header>
       <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h3><a name="why" class="anchor" href="#why"><span class="octicon octicon-link"></span></a>Why?</h3>
+        <p>If you are developing web-apps for mobile devices wrapped in something like PhoneGap, Icenium, etc. you may come to a point where you want to enable your users to use maps even though they are not online. Especially when you are on vacation in a foreign country or you are just in the underground and have no data connection available. Then this little sample might help you...</p>
+      </section>
+      <section>
+        <h3><a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h3>
+        <p>First of all we need a map. We will use a TileMill (by MapBox) exported mbtile file. The mbtile file in this repository is an export from the Washingtion DC sample included in the TileMill Application. <strong>Important</strong>, as the javascript sqlite library will automatically add a ".db" extension to your mbtile file, you need to add this manually.</p>
+        <p>After the map creation we need our native wrapper. In this example we use PhoneGap, but you could essentially use any Cordova (Apache) based wrapper. PhoneGap comes with a command line tool that helps you create your projects:</p>
+        <pre><code>$ your_phonegap_folder/lib/ios/bin/create new_project_folder com.company.project project_name
+        </code></pre>
+        <p>After installation we open the project in xCode and add the SQLite Library () to the plugins folder. Depending on the PhoneGap version you are using go to config.xml and add the lines. Now go to your target in xcode and add the sqlite3.dlyb library to the "Linked Frameworks and Libraries" (see image below). Then add the mbtile file created in the first step to your resources in xcode.</p>
+        <div class="image-container">
+          <img src="images/app.png" alt="Adding the sqlite library in xCode" />
+          <span class="image-subline">Adding the sqlite library in xCode</span>
+        </div>
+        <p>To enable the sqlite library to access our database file, we need to copy it to the right location on startup. Therefore we need to commentout the function and modify it:</p>
+        <pre><code>- (void) webViewDidStartLoad:(UIWebView*)theWebView
+{
+    NSString *databaseName = @"map.mbtiles.db";
+    
+    NSArray *libraryPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+    NSString *libraryDir = [libraryPaths objectAtIndex:0];
+    
+    NSString *databasePath = [libraryDir stringByAppendingPathComponent:@"../Documents/Databases/"];
+    NSString *databaseFile = [databasePath stringByAppendingPathComponent:databaseName];
+    
+    BOOL success;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    success = [fileManager fileExistsAtPath:databasePath];
+    if(success) return;
+    
+    NSString *databasePathFromApp = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:databaseName];
+    
+    [fileManager createDirectoryAtPath:databasePath withIntermediateDirectories:YES attributes:nil error:NULL];
+    [fileManager copyItemAtPath:databasePathFromApp toPath:databaseFile error:nil];
+    [fileManager release];
+    
+    return [super webViewDidStartLoad:theWebView];
+}
+        </code></pre>
+        <p>The interesting part is writing the html/javascript code that creates the map and connects it via the sqlite plugin to our mbtiles file. We will use the phonegap sample files. First of all you need to add the leaflet javascript library and stylesheet. You could use the hosted version, but as we want to build an offline app, you should include the latest version from the leaflet website directly into your application. In addition we need the sqlite-plugin-file and make sure the cordova library is still in the www folder. The following lines will take of map &amp; sqlite creation:</p>
+         <pre><code>copy code from xcode
+        </code></pre>
+        <p>Last but not least we need to add the MBTiles Plugin. This plugin was taken from... and slightly modified to work with the sqlite Libraries. Comment: the leaflet documentation says that you can set the layer property tms:true, but i couldn't get it to work. So i just added the lines:</p>
+        <pre><code>copy code from xcode
+        </code></pre>
+        <p>The numbering of tilemills y-coordinate is in reverse order, this lines take care that the leaflet order is translated into tilemill order.</p>
+        <p>If everything went smoothly you should now have an offline-map engine that should look like this:.</p>
+        <div class="image-container">
+          <img src="images/app.png" alt="Offline Map App Screenshot" />
+          <span class="image-subline">Offline Map App Screenshot</span>
+        </div>
+      </section>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
 
 <p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
 
