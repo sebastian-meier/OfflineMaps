@@ -253,3 +253,14 @@ footer {
     color:#444;
   }
 }
+
+.image-container{
+  width:100%;
+  display:block;
+  text-align: center;
+}
+
+.image-subline{
+  width:100%;
+  text-align: center;
+}

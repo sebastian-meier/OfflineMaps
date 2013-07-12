@@ -39,8 +39,12 @@
         </code></pre>
         <p>After installation we open the project in xCode and add the SQLite Library () to the plugins folder. Depending on the PhoneGap version you are using go to config.xml and add the lines. Now go to your target in xcode and add the sqlite3.dlyb library to the "Linked Frameworks and Libraries" (see image below). Then add the mbtile file created in the first step to your resources in xcode.</p>
         <div class="image-container">
-          <img src="images/app.png" alt="Adding the sqlite library in xCode" />
-          <span class="image-subline">Adding the sqlite library in xCode</span>
+          <img src="images/xcode_1.png" alt="Adding the sqlite library in xCode Step 1" />
+          <span class="image-subline">Adding the sqlite library in xCode Step 1</span>
+        </div>
+        <div class="image-container">
+          <img src="images/xcode_2.png" alt="Adding the sqlite library in xCode Step 2" />
+          <span class="image-subline">Adding the sqlite library in xCode Step 2</span>
         </div>
         <p>To enable the sqlite library to access our database file, we need to copy it to the right location on startup. Therefore we need to commentout the function and modify it:</p>
         <pre><code>- (void) webViewDidStartLoad:(UIWebView*)theWebView
