@@ -264,3 +264,7 @@ footer {
   width:100%;
   text-align: center;
 }
+
+.image-container img{
+  margin:0 auto;
+}
