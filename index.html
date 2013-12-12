@@ -27,15 +27,19 @@
       </header>
       <section>
         <h3><a name="why" class="anchor" href="#why"><span class="octicon octicon-link"></span></a>Why?</h3>
-        <p>If you are developing web-apps for mobile devices wrapped in something like PhoneGap, Icenium, etc. you may come to a point where you want to enable your users to use maps even though they are not online. Especially when you are on vacation in a foreign country or you are just in the underground and have no mobile reception. Then this little sample might help you...</p>
+        <p>If you are developing web-apps for mobile devices wrapped in something like PhoneGap, Icenium, etc. you may come to a point where you want to enable your users to use maps even though they are not online. Especially when you are on vacation in a foreign country or you are just in the underground and have no mobile reception.</p>
+        <p>There are two ways to achive an offline map. The first is simple, create an mbtile file with TileMill and use the <a href="https://github.com/mapbox/mbutil">mbutil</a> to extract folders and pngs. This folder can simply be added to your web app and you can define the folder as an url for your leaflet TileLayer. BUT, using this method you end up with a huge amount of files, which need to be copied to your testing device every time you run your application and this takes ages. So for better handling it is adviced to use the mbtiles files created by MapBox for exactly this purpose, better handling. For those who quickly want to know what mbtiles files are: those files are SQLite Databases holding all tile images of your exported map. You can very easily use this Firefox Extension <a href="https://addons.mozilla.org/de/firefox/addon/sqlite-manager/">SQLite-Manager</a> to look into an mbtile and see the tiles.</p>
       </section>
       <section>
         <h3><a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h3>
-        <p>First of all we need a map. We will use a mbtile file exported from <a href="http://www.mapbox.com/tilemill/">TileMill</a>. The mbtile file in this repository is an export from the Washingtion DC sample included in the TileMill Application. <i>Important: as the javascript sqlite library will automatically add a ".db" extension to your mbtile file name, you need to add this manually.</i></p>
+        <p>First of all we need a map. We will use a mbtile file exported from <a href="http://www.mapbox.com/tilemill/">TileMill</a>. The mbtile file in this repository is an export from the Washingtion DC sample included in the TileMill Application. <i>Important: as the javascript sqlite library will automatically add a ".db" extension to your mbtile file name, you need to add this manually to the file itself.</i></p>
         <p>After the map creation we need our native wrapper. In this example we use <a href="http://phonegap.com/">PhoneGap</a>, but you could essentially use any Cordova (Apache) based wrapper. PhoneGap comes with a command line tool that helps you create your projects:</p>
-        <pre><code>$ your_phonegap_folder/lib/ios/bin/create <br />new_project_folder <br />com.company.project <br />project_name
-        </code></pre>
-        <p>After installation we open the project in xCode and add the SQLite Library () to the plugins folder. Depending on the PhoneGap version you are using go to config.xml and add the lines. Now go to your target in xcode and add the sqlite3.dlyb library to the "Linked Frameworks and Libraries" (see image below). Then add the mbtile file created in the first step to your resources in xcode.</p>
+        <pre><code>$ your_phonegap_folder/lib/ios/bin/create new_project_folder com.company.project project_name</code></pre>
+        <p>After installation we open the project in xCode and add the <a href="https://github.com/pgsqlite/PG-SQLitePlugin-iOS">SQLite Plugin</a> (by <a href="https://github.com/pgsqlite" class="user-mention">pgsqlite</a>) to the plugins folder. Go to config.xml and add these lines (Depending on the PhoneGap version you are using, this might be a plist file):</p>
+        <pre><code>&lt;feature name="SQLitePlugin"&gt;
+&lt;param name="ios-package" value="SQLitePlugin" /&gt;
+&lt;/feature&gt;</code></pre>
+        <p>Now go to your target in xcode and add the "sqlite3.dylib" library to the "Linked Frameworks and Libraries" (see image below). Then add the mbtile file created in the first step to your resources in xcode.</p>
         <div class="image-container">
           <img src="images/xcode_1.png" alt="Adding the sqlite library in xCode Step 1" />
           <span class="image-subline">Adding the sqlite library in xCode Step 1</span>
@@ -44,7 +48,7 @@
           <img src="images/xcode_2.png" alt="Adding the sqlite library in xCode Step 2" />
           <span class="image-subline">Adding the sqlite library in xCode Step 2</span>
         </div>
-        <p>To enable the sqlite library to access our database file, we need to copy it to the right location on startup. Therefore we need to commentout the function and modify it:</p>
+        <p>To enable the sqlite library to access our database file, we need to copy it to the right location on startup. Therefore we need to commentout the function "webViewDidStartLoad" and modify it:</p>
         <pre><code>- (void) webViewDidStartLoad:(UIWebView*)theWebView
 {
     NSString *databaseName = @"map.mbtiles.db";
@@ -68,9 +72,10 @@
     [fileManager release];
     
     return [super webViewDidStartLoad:theWebView];
-}
-        </code></pre>
-        <p>The interesting part is writing the html/javascript code that creates the map and connects it via the sqlite plugin to our mbtiles file. We will use the phonegap sample files. First of all you need to add the leaflet javascript library and stylesheet. You could use the hosted version, but as we want to build an offline app, you should include the latest version from the leaflet website directly into your application. In addition we need the sqlite-plugin-file and make sure the cordova library is still in the www folder. The following lines will take care of map &amp; sqlite creation:</p>
+}</code></pre>
+        <p>What we do here is simply checking on every startup of the application if the database file has already been copied to our defined destination or not. If not the file is copied. If your curious about the structur of the apps data directory you can see the structure if you go to:</p>
+        <code><pre>/Usr/Library/Application&nbsp;Support/iPhone&nbsp;Simulator/iOS_of_you_choice/...</pre></code>
+        <p>The interesting part is writing the html/javascript code that creates the map and connects it via the sqlite plugin to our mbtiles file. We will use the phonegap sample files. First of all you need to add the <a href="http://leafletjs.com/">leaflet</a> javascript library and stylesheet. You could use the hosted version, but as we want to build an offline app, you should include the latest version from the leaflet website directly into your application. In addition we need the sqlite-plugin-file (included in the pgsqlite's <a href="https://github.com/pgsqlite/PG-SQLitePlugin-iOS">repository</a>) and make sure the cordova library is still in the www folder. The following lines will take care of map &amp; sqlite creation:</p>
          <pre><code>onDeviceReady: function() {
   console.log("onDeviceReady");
 
@@ -100,12 +105,10 @@
     }
   );
 
-}
-        </code></pre>
+}</code></pre>
         <p>Last but not least we need to add the MBTiles Plugin. This plugin was taken from... and slightly modified to work with the sqlite Libraries. Comment: the leaflet documentation says that you can set the layer property tms:true, but i couldn't get it to work. So i just added the lines:</p>
         <pre><code>var limit = this._getWrapTileNum();
-var y = limit - tilePoint.y - 1;
-        </code></pre>
+var y = limit - tilePoint.y - 1;</code></pre>
         <p>The numbering of tilemills y-coordinate is in reverse order, this lines take care that the leaflet order is translated into tilemill order.</p>
         <p>If everything went smoothly you should now have an offline-map engine that should look like this:</p>
         <div class="image-container">
